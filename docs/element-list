@@ -1,0 +1,7 @@
+rs.zr.sa.poliklinika
+rs.zr.sa.poliklinika.controller
+rs.zr.sa.poliklinika.dto
+rs.zr.sa.poliklinika.entity
+rs.zr.sa.poliklinika.repository
+rs.zr.sa.poliklinika.service
+rs.zr.sa.poliklinika.service.impl
