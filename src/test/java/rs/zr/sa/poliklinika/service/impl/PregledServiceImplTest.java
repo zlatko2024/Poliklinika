@@ -57,7 +57,7 @@ class PregledServiceImplTest {
 
         poliklinika = new Poliklinika();
         poliklinika.setPoliklinikaId(1L);
-        poliklinika.setNaziv("Poliklinika Centar");
+        poliklinika.setNaziv("PoliklinikaApp Centar");
         poliklinika.setAdresa("Nemanjina 1");
         poliklinika.setKontaktTelefon("023123456");
 
@@ -159,7 +159,7 @@ class PregledServiceImplTest {
             pregledService.save(pregledRequest);
         });
 
-        assertEquals("Poliklinika sa ID-jem 1 nije pronadjena.", exception.getMessage());
+        assertEquals("PoliklinikaApp sa ID-jem 1 nije pronadjena.", exception.getMessage());
         verify(pacijentRepository, times(1)).findById(1L);
         verify(poliklinikaRepository, times(1)).findById(1L);
         verify(pregledRepository, never()).save(any(Pregled.class));

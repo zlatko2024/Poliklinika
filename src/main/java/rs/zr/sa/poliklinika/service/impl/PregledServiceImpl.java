@@ -71,7 +71,7 @@ public class PregledServiceImpl implements PregledService {
                 .orElseThrow(() -> new RuntimeException("Pacijent sa ID-jem " + request.getPacijentId() + " nije pronadjen."));
 
         Poliklinika poliklinika = poliklinikaRepository.findById(request.getPoliklinikaId())
-                .orElseThrow(() -> new RuntimeException("Poliklinika sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
+                .orElseThrow(() -> new RuntimeException("PoliklinikaApp sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
 
         Pregled pregled = new Pregled();
         pregled.setDatum(request.getDatum());
@@ -102,7 +102,7 @@ public class PregledServiceImpl implements PregledService {
                 .orElseThrow(() -> new RuntimeException("Pacijent sa ID-jem " + request.getPacijentId() + " nije pronadjen."));
 
         Poliklinika poliklinika = poliklinikaRepository.findById(request.getPoliklinikaId())
-                .orElseThrow(() -> new RuntimeException("Poliklinika sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
+                .orElseThrow(() -> new RuntimeException("PoliklinikaApp sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
 
         pregled.setDatum(request.getDatum());
         pregled.setVreme(request.getVreme());

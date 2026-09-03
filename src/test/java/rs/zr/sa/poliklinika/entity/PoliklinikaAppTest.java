@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PoliklinikaTest {
+class PoliklinikaAppTest {
 
     private Validator validator;
 
@@ -109,8 +109,8 @@ class PoliklinikaTest {
 
     @ParameterizedTest
     @CsvSource({
-            "Poliklinika A, Ulica 1, 023123456",
-            "Poliklinika B, Ulica 2, 021654321"
+            "PoliklinikaApp A, Ulica 1, 023123456",
+            "PoliklinikaApp B, Ulica 2, 021654321"
     })
     @DisplayName("Validacija treba da prodje za ispravne objekte Poliklinike")
     void validate_ValidPoliklinika_NoViolations(String naziv, String adresa, String kontaktTelefon) {

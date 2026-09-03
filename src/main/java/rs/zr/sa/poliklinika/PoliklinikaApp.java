@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Zlatko Radovanovic
  */
 @SpringBootApplication
-public class CentarApp {
+public class PoliklinikaApp {
     public static void main(String[] args) {
-        SpringApplication.run(CentarApp.class, args);
+        SpringApplication.run(PoliklinikaApp.class, args);
     }
 }

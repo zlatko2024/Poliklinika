@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Implementacija servisnog sloja za entitet Poliklinika.
+ * Implementacija servisnog sloja za entitet PoliklinikaApp.
  * Sadrži poslovnu logiku za upravljanje podacima o poliklinikama, uključujući
  * pretragu, kreiranje, ažuriranje, brisanje i mapiranje entiteta u DTO objekte.
  *
@@ -46,7 +46,7 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
     @Override
     public PoliklinikaResponse findById(Long id) {
         Poliklinika poliklinika = poliklinikaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Poliklinika sa ID-jem " + id + " nije pronadjena."));
+                .orElseThrow(() -> new RuntimeException("PoliklinikaApp sa ID-jem " + id + " nije pronadjena."));
         return mapToResponse(poliklinika);
     }
 
@@ -78,7 +78,7 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
     @Override
     public PoliklinikaResponse update(Long id, PoliklinikaRequest request) {
         Poliklinika poliklinika = poliklinikaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Poliklinika sa ID-jem " + id + " nije pronadjena za azuriranje."));
+                .orElseThrow(() -> new RuntimeException("PoliklinikaApp sa ID-jem " + id + " nije pronadjena za azuriranje."));
 
         poliklinika.setNaziv(request.getNaziv());
         poliklinika.setAdresa(request.getAdresa());
@@ -97,7 +97,7 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
     @Override
     public void delete(Long id) {
         if (!poliklinikaRepository.existsById(id)) {
-            throw new RuntimeException("Poliklinika sa ID-jem " + id + " ne postoji.");
+            throw new RuntimeException("PoliklinikaApp sa ID-jem " + id + " ne postoji.");
         }
         poliklinikaRepository.deleteById(id);
     }

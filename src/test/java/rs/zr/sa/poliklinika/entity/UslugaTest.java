@@ -131,6 +131,6 @@ class UslugaTest {
 
         assertFalse(violations.isEmpty(), "Neuspešno, null poliklinika je prošla");
         String msg = violations.iterator().next().getMessage();
-        assertEquals("Poliklinika mora biti dodeljena usluzi", msg);
+        assertEquals("PoliklinikaApp mora biti dodeljena usluzi", msg);
     }
 }

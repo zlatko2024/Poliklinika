@@ -41,7 +41,7 @@ class DoktorServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        poliklinika = new Poliklinika(1L, "Poliklinika Centar", "Nemanjina 1", "023123456", null);
+        poliklinika = new Poliklinika(1L, "PoliklinikaApp Centar", "Nemanjina 1", "023123456", null);
         usluga = new Usluga(1L, "Kardiološki pregled", 3000.0, poliklinika);
 
         doktor = new Doktor(1L, "Marko", "Marković", "LIC123", "Kardiolog", usluga);

@@ -71,10 +71,10 @@ public class Pregled {
     private Pacijent pacijent;
 
     /**
-     * Poliklinika u kojoj se obavlja pregled
+     * PoliklinikaApp u kojoj se obavlja pregled
      * Nedozvoljene vrednosti: Vrednost ne sme biti null
      */
-    @NotNull(message = "Poliklinika mora biti dodeljena pregledu")
+    @NotNull(message = "PoliklinikaApp mora biti dodeljena pregledu")
     @ManyToOne
     @JoinColumn(name = "poliklinika_id", nullable = false)
     private Poliklinika poliklinika;

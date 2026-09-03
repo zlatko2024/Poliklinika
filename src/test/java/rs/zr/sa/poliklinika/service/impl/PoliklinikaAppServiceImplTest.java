@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PoliklinikaServiceImplTest {
+class PoliklinikaAppServiceImplTest {
 
     @Mock
     private PoliklinikaRepository poliklinikaRepository;
@@ -35,12 +35,12 @@ class PoliklinikaServiceImplTest {
     void setUp() {
         poliklinika = new Poliklinika();
         poliklinika.setPoliklinikaId(1L);
-        poliklinika.setNaziv("Poliklinika Centar");
+        poliklinika.setNaziv("PoliklinikaApp Centar");
         poliklinika.setAdresa("Nemanjina 1");
         poliklinika.setKontaktTelefon("023123456");
 
         poliklinikaRequest = new PoliklinikaRequest();
-        poliklinikaRequest.setNaziv("Poliklinika Centar");
+        poliklinikaRequest.setNaziv("PoliklinikaApp Centar");
         poliklinikaRequest.setAdresa("Nemanjina 1");
         poliklinikaRequest.setKontaktTelefon("023123456");
     }
@@ -54,7 +54,7 @@ class PoliklinikaServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Poliklinika Centar", result.get(0).getNaziv());
+        assertEquals("PoliklinikaApp Centar", result.get(0).getNaziv());
         verify(poliklinikaRepository, times(1)).findAll();
     }
 
@@ -67,7 +67,7 @@ class PoliklinikaServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1L, result.getPoliklinikaId());
-        assertEquals("Poliklinika Centar", result.getNaziv());
+        assertEquals("PoliklinikaApp Centar", result.getNaziv());
         verify(poliklinikaRepository, times(1)).findById(1L);
     }
 
@@ -80,7 +80,7 @@ class PoliklinikaServiceImplTest {
             poliklinikaService.findById(99L);
         });
 
-        assertEquals("Poliklinika sa ID-jem 99 nije pronadjena.", exception.getMessage());
+        assertEquals("PoliklinikaApp sa ID-jem 99 nije pronadjena.", exception.getMessage());
         verify(poliklinikaRepository, times(1)).findById(99L);
     }
 
@@ -92,7 +92,7 @@ class PoliklinikaServiceImplTest {
         PoliklinikaResponse result = poliklinikaService.save(poliklinikaRequest);
 
         assertNotNull(result);
-        assertEquals("Poliklinika Centar", result.getNaziv());
+        assertEquals("PoliklinikaApp Centar", result.getNaziv());
         verify(poliklinikaRepository, times(1)).save(any(Poliklinika.class));
     }
 
@@ -102,7 +102,7 @@ class PoliklinikaServiceImplTest {
         when(poliklinikaRepository.findById(1L)).thenReturn(Optional.of(poliklinika));
         when(poliklinikaRepository.save(any(Poliklinika.class))).thenReturn(poliklinika);
 
-        poliklinikaRequest.setNaziv("Nova Poliklinika");
+        poliklinikaRequest.setNaziv("Nova PoliklinikaApp");
         PoliklinikaResponse result = poliklinikaService.update(1L, poliklinikaRequest);
 
         assertNotNull(result);
@@ -119,7 +119,7 @@ class PoliklinikaServiceImplTest {
             poliklinikaService.update(99L, poliklinikaRequest);
         });
 
-        assertEquals("Poliklinika sa ID-jem 99 nije pronadjena za azuriranje.", exception.getMessage());
+        assertEquals("PoliklinikaApp sa ID-jem 99 nije pronadjena za azuriranje.", exception.getMessage());
         verify(poliklinikaRepository, times(1)).findById(99L);
         verify(poliklinikaRepository, never()).save(any(Poliklinika.class));
     }
@@ -145,7 +145,7 @@ class PoliklinikaServiceImplTest {
             poliklinikaService.delete(99L);
         });
 
-        assertEquals("Poliklinika sa ID-jem 99 ne postoji.", exception.getMessage());
+        assertEquals("PoliklinikaApp sa ID-jem 99 ne postoji.", exception.getMessage());
         verify(poliklinikaRepository, times(1)).existsById(99L);
         verify(poliklinikaRepository, never()).deleteById(anyLong());
     }

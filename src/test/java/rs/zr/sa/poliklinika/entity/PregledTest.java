@@ -240,6 +240,6 @@ class PregledTest {
 
         assertFalse(violations.isEmpty(), "Neuspesno, null poliklinika je prosla");
         String msg = violations.iterator().next().getMessage();
-        assertEquals("Poliklinika mora biti dodeljena pregledu", msg);
+        assertEquals("PoliklinikaApp mora biti dodeljena pregledu", msg);
     }
 }

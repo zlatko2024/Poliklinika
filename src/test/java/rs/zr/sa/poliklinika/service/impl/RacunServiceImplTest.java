@@ -58,7 +58,7 @@ class RacunServiceImplTest {
 
         poliklinika = new Poliklinika();
         poliklinika.setPoliklinikaId(1L);
-        poliklinika.setNaziv("Poliklinika Centar");
+        poliklinika.setNaziv("PoliklinikaApp Centar");
         poliklinika.setAdresa("Nemanjina 1");
         poliklinika.setKontaktTelefon("023123456");
 

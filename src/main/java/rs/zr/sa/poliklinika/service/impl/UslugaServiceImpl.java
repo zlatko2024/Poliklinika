@@ -64,7 +64,7 @@ public class UslugaServiceImpl implements UslugaService {
     @Override
     public UslugaResponse save(UslugaRequest request) {
         Poliklinika poliklinika = poliklinikaRepository.findById(request.getPoliklinikaId())
-                .orElseThrow(() -> new RuntimeException("Poliklinika sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
+                .orElseThrow(() -> new RuntimeException("PoliklinikaApp sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
 
         Usluga usluga = new Usluga();
         usluga.setNaziv(request.getNaziv());
@@ -89,7 +89,7 @@ public class UslugaServiceImpl implements UslugaService {
                 .orElseThrow(() -> new RuntimeException("Usluga sa ID-jem " + id + " nije pronadjena za azuriranje."));
 
         Poliklinika poliklinika = poliklinikaRepository.findById(request.getPoliklinikaId())
-                .orElseThrow(() -> new RuntimeException("Poliklinika sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
+                .orElseThrow(() -> new RuntimeException("PoliklinikaApp sa ID-jem " + request.getPoliklinikaId() + " nije pronadjena."));
 
         usluga.setNaziv(request.getNaziv());
         usluga.setCena(request.getCena());

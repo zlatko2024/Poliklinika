@@ -45,10 +45,10 @@ public class Usluga {
     private Double cena;
 
     /**
-     * Poliklinika u kojoj se usluga pruza
+     * PoliklinikaApp u kojoj se usluga pruza
      * Nedozvoljene vrednosti: Vrednost ne sme biti null
      */
-    @NotNull(message = "Poliklinika mora biti dodeljena usluzi")
+    @NotNull(message = "PoliklinikaApp mora biti dodeljena usluzi")
     @ManyToOne
     @JoinColumn(name = "poliklinika_id", nullable = false)
     private Poliklinika poliklinika;
