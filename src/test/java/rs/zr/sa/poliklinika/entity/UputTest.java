@@ -7,6 +7,9 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -22,7 +25,7 @@ class UputTest {
     void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        mockPacijent = new Pacijent(); // Pretpostavka da Pacijent ima prazan konstruktor
+        mockPacijent = new Pacijent();
     }
 
     @Test
@@ -57,11 +60,41 @@ class UputTest {
         assertEquals("UP-2026-003", u.getBrojUputa());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setBrojUputa sa validacijom")
+    void setBrojUputa_InvalidValues_ShouldFailValidation(String invalidBroj) {
+        Uput u = new Uput();
+        u.setBrojUputa(invalidBroj);
+        u.setDatumIzdavanja(LocalDate.now());
+        u.setDijagnoza("Specijalistički pregled");
+        u.setPacijent(mockPacijent);
+
+        Set<ConstraintViolation<Uput>> violations = validator.validate(u);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setDijagnoza() {
         Uput u = new Uput();
         u.setDijagnoza("Kontrolni pregled");
         assertEquals("Kontrolni pregled", u.getDijagnoza());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setDijagnoza sa validacijom")
+    void setDijagnoza_InvalidValues_ShouldFailValidation(String invalidDijagnoza) {
+        Uput u = new Uput();
+        u.setBrojUputa("UP-2026-002");
+        u.setDatumIzdavanja(LocalDate.now());
+        u.setDijagnoza(invalidDijagnoza);
+        u.setPacijent(mockPacijent);
+
+        Set<ConstraintViolation<Uput>> violations = validator.validate(u);
+        assertFalse(violations.isEmpty());
     }
 
     @Test

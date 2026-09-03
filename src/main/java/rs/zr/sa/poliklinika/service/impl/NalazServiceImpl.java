@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 
 /**
  * Implementacija servisnog sloja za entitet Nalaz.
+ * Sadrži poslovnu logiku za upravljanje medicinskim nalazima, uključujući
+ * pretragu, kreiranje, ažuriranje, brisanje i mapiranje entiteta u odgovarajuće DTO objekte.
+ *
  * @author Zlatko Radovanovic
  */
 @Service
@@ -24,6 +27,11 @@ public class NalazServiceImpl implements NalazService {
     private final PregledRepository pregledRepository;
     private final UputRepository uputRepository;
 
+    /**
+     * Vraća listu svih nalaza evidentiranih u sistemu.
+     *
+     * @return lista objekata tipa {@link NalazResponse} sa podacima o svim nalazima
+     */
     @Override
     public List<NalazResponse> findAll() {
         return nalazRepository.findAll().stream()
@@ -31,6 +39,13 @@ public class NalazServiceImpl implements NalazService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Pronalazi nalaz na osnovu njegovog jedinstvenog identifikatora.
+     *
+     * @param id jedinstveni identifikator nalaza
+     * @return objekat tipa {@link NalazResponse} sa podacima o pronađenom nalažu
+     * @throws RuntimeException ako nalaz sa datim ID-jem ne postoji
+     */
     @Override
     public NalazResponse findById(Long id) {
         Nalaz nalaz = nalazRepository.findById(id)
@@ -38,6 +53,13 @@ public class NalazServiceImpl implements NalazService {
         return mapToResponse(nalaz);
     }
 
+    /**
+     * Čuva novi nalaz u bazi podataka na osnovu prosleđenih podataka.
+     *
+     * @param request objekat tipa {@link NalazRequest} koji sadrži podatke za kreiranje nalaza
+     * @return objekat tipa {@link NalazResponse} sa podacima o sačuvanom nalažu
+     * @throws RuntimeException ako povezani pregled ili opcioni uput sa datim ID-jem ne postoje
+     */
     @Override
     public NalazResponse save(NalazRequest request) {
         Pregled pregled = pregledRepository.findById(request.getPregledId())
@@ -61,6 +83,14 @@ public class NalazServiceImpl implements NalazService {
         return mapToResponse(saved);
     }
 
+    /**
+     * Ažurira postojeće podatke o nalažu na osnovu njegovog ID-ja i novih podataka.
+     *
+     * @param id jedinstveni identifikator nalaza koji se ažurira
+     * @param request objekat tipa {@link NalazRequest} koji sadrži nove podatke
+     * @return objekat tipa {@link NalazResponse} sa ažuriranim podacima
+     * @throws RuntimeException ako nalaz, povezani pregled ili opcioni uput sa datim ID-jem ne postoje
+     */
     @Override
     public NalazResponse update(Long id, NalazRequest request) {
         Nalaz nalaz = nalazRepository.findById(id)
@@ -86,6 +116,12 @@ public class NalazServiceImpl implements NalazService {
         return mapToResponse(updated);
     }
 
+    /**
+     * Briše nalaz iz sistema na osnovu njegovog jedinstvenog identifikatora.
+     *
+     * @param id jedinstveni identifikator nalaza koji se briše
+     * @throws RuntimeException ako nalaz sa datim ID-jem ne postoji
+     */
     @Override
     public void delete(Long id) {
         if (!nalazRepository.existsById(id)) {
@@ -94,6 +130,12 @@ public class NalazServiceImpl implements NalazService {
         nalazRepository.deleteById(id);
     }
 
+    /**
+     * Pomoćna metoda za mapiranje entiteta {@link Nalaz} u odgovarajući DTO objekat {@link NalazResponse}.
+     *
+     * @param n entitet nalaza koji se mapira
+     * @return mapirani objekat tipa {@link NalazResponse}
+     */
     private NalazResponse mapToResponse(Nalaz n) {
         Pregled pr = n.getPregled();
         Pacijent pac = pr.getPacijent();

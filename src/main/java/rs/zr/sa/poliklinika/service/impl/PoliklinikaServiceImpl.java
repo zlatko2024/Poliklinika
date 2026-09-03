@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 /**
  * Implementacija servisnog sloja za entitet Poliklinika.
+ * Sadrži poslovnu logiku za upravljanje podacima o poliklinikama, uključujući
+ * pretragu, kreiranje, ažuriranje, brisanje i mapiranje entiteta u DTO objekte.
+ *
  * @author Zlatko Radovanovic
  */
 @Service
@@ -21,6 +24,11 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
 
     private final PoliklinikaRepository poliklinikaRepository;
 
+    /**
+     * Vraća listu svih poliklinika evidentiranih u sistemu.
+     *
+     * @return lista objekata tipa {@link PoliklinikaResponse} koja sadrži podatke o svim poliklinikama
+     */
     @Override
     public List<PoliklinikaResponse> findAll() {
         return poliklinikaRepository.findAll().stream()
@@ -28,6 +36,13 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Pronalazi polikliniku na osnovu njenog jedinstvenog identifikatora.
+     *
+     * @param id jedinstveni identifikator poliklinike
+     * @return objekat tipa {@link PoliklinikaResponse} sa podacima o pronađenoj poliklinici
+     * @throws RuntimeException ako poliklinika sa datim ID-jem ne postoji
+     */
     @Override
     public PoliklinikaResponse findById(Long id) {
         Poliklinika poliklinika = poliklinikaRepository.findById(id)
@@ -35,6 +50,12 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
         return mapToResponse(poliklinika);
     }
 
+    /**
+     * Čuva novu polikliniku u bazi podataka na osnovu prosleđenih podataka.
+     *
+     * @param request objekat tipa {@link PoliklinikaRequest} koji sadrži podatke za kreiranje poliklinike
+     * @return objekat tipa {@link PoliklinikaResponse} sa podacima o sačuvanoj poliklinici
+     */
     @Override
     public PoliklinikaResponse save(PoliklinikaRequest request) {
         Poliklinika poliklinika = new Poliklinika();
@@ -46,6 +67,14 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
         return mapToResponse(saved);
     }
 
+    /**
+     * Ažurira postojeće podatke o poliklinici na osnovu njenog ID-ja i novih podataka.
+     *
+     * @param id jedinstveni identifikator poliklinike koja se ažurira
+     * @param request objekat tipa {@link PoliklinikaRequest} koji sadrži nove podatke
+     * @return objekat tipa {@link PoliklinikaResponse} sa ažuriranim podacima o poliklinici
+     * @throws RuntimeException ako poliklinika sa datim ID-jem ne postoji
+     */
     @Override
     public PoliklinikaResponse update(Long id, PoliklinikaRequest request) {
         Poliklinika poliklinika = poliklinikaRepository.findById(id)
@@ -59,6 +88,12 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
         return mapToResponse(updated);
     }
 
+    /**
+     * Briše polikliniku iz sistema na osnovu njenog jedinstvenog identifikatora.
+     *
+     * @param id jedinstveni identifikator poliklinike koja se briše
+     * @throws RuntimeException ako poliklinika sa datim ID-jem ne postoji
+     */
     @Override
     public void delete(Long id) {
         if (!poliklinikaRepository.existsById(id)) {
@@ -67,6 +102,12 @@ public class PoliklinikaServiceImpl implements PoliklinikaService {
         poliklinikaRepository.deleteById(id);
     }
 
+    /**
+     * Pomoćna metoda za mapiranje entiteta {@link Poliklinika} u odgovarajući DTO objekat {@link PoliklinikaResponse}.
+     *
+     * @param p entitet poliklinike koji se mapira
+     * @return mapirani objekat tipa {@link PoliklinikaResponse}
+     */
     private PoliklinikaResponse mapToResponse(Poliklinika p) {
         return new PoliklinikaResponse(p.getPoliklinikaId(), p.getNaziv(), p.getAdresa(), p.getKontaktTelefon());
     }

@@ -7,6 +7,9 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -23,8 +26,8 @@ class RacunTest {
     void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        mockPregled = new Pregled();   // Pretpostavka da Pregled ima prazan konstruktor
-        mockDoktor = new Doktor();     // Pretpostavka da Doktor ima prazan konstruktor
+        mockPregled = new Pregled();
+        mockDoktor = new Doktor();
     }
 
     @Test
@@ -59,6 +62,23 @@ class RacunTest {
         assertEquals("RAC-2026-002", r.getBrojRacuna());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setBrojRacuna sa validacijom")
+    void setBrojRacuna_InvalidValues_ShouldFailValidation(String invalidBroj) {
+        Racun r = new Racun();
+        r.setBrojRacuna(invalidBroj);
+        r.setDatumIzdavanja(LocalDate.now());
+        r.setUkupanIznos(5000.0);
+        r.setStatusPlacanja("Plaćeno");
+        r.setPregled(mockPregled);
+        r.setDoktor(mockDoktor);
+
+        Set<ConstraintViolation<Racun>> violations = validator.validate(r);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setUkupanIznos() {
         Racun r = new Racun();
@@ -67,10 +87,42 @@ class RacunTest {
     }
 
     @Test
+    @DisplayName("Testiranje nedozvoljene null vrednosti za setUkupanIznos sa validacijom")
+    void setUkupanIznos_Null_ShouldFailValidation() {
+        Racun r = new Racun();
+        r.setBrojRacuna("RAC-2026-001");
+        r.setDatumIzdavanja(LocalDate.now());
+        r.setUkupanIznos(null);
+        r.setStatusPlacanja("Plaćeno");
+        r.setPregled(mockPregled);
+        r.setDoktor(mockDoktor);
+
+        Set<ConstraintViolation<Racun>> violations = validator.validate(r);
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
     void setStatusPlacanja() {
         Racun r = new Racun();
         r.setStatusPlacanja("Nije plaćeno");
         assertEquals("Nije plaćeno", r.getStatusPlacanja());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setStatusPlacanja sa validacijom")
+    void setStatusPlacanja_InvalidValues_ShouldFailValidation(String invalidStatus) {
+        Racun r = new Racun();
+        r.setBrojRacuna("RAC-2026-001");
+        r.setDatumIzdavanja(LocalDate.now());
+        r.setUkupanIznos(5000.0);
+        r.setStatusPlacanja(invalidStatus);
+        r.setPregled(mockPregled);
+        r.setDoktor(mockDoktor);
+
+        Set<ConstraintViolation<Racun>> violations = validator.validate(r);
+        assertFalse(violations.isEmpty());
     }
 
     @Test

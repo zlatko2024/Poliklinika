@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Set;
 
@@ -55,6 +57,21 @@ class PacijentTest {
         assertEquals("Petar", p.getIme());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setIme sa validacijom")
+    void setIme_InvalidValues_ShouldFailValidation(String invalidIme) {
+        Pacijent p = new Pacijent();
+        p.setIme(invalidIme);
+        p.setPrezime("Petrovic");
+        p.setJmbg("1234567890123");
+        p.setEmail("petar@gmail.com");
+
+        Set<ConstraintViolation<Pacijent>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setPrezime() {
         Pacijent p = new Pacijent();
@@ -62,11 +79,63 @@ class PacijentTest {
         assertEquals("Petrovic", p.getPrezime());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setPrezime sa validacijom")
+    void setPrezime_InvalidValues_ShouldFailValidation(String invalidPrezime) {
+        Pacijent p = new Pacijent();
+        p.setIme("Petar");
+        p.setPrezime(invalidPrezime);
+        p.setJmbg("1234567890123");
+        p.setEmail("petar@gmail.com");
+
+        Set<ConstraintViolation<Pacijent>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
+    void setJmbg() {
+        Pacijent p = new Pacijent();
+        p.setJmbg("1234567890123");
+        assertEquals("1234567890123", p.getJmbg());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setJmbg sa validacijom")
+    void setJmbg_InvalidValues_ShouldFailValidation(String invalidJmbg) {
+        Pacijent p = new Pacijent();
+        p.setIme("Petar");
+        p.setPrezime("Petrovic");
+        p.setJmbg(invalidJmbg);
+        p.setEmail("petar@gmail.com");
+
+        Set<ConstraintViolation<Pacijent>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setEmail() {
         Pacijent p = new Pacijent();
         p.setEmail("petar@gmail.com");
         assertEquals("petar@gmail.com", p.getEmail());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setEmail sa validacijom")
+    void setEmail_InvalidValues_ShouldFailValidation(String invalidEmail) {
+        Pacijent p = new Pacijent();
+        p.setIme("Petar");
+        p.setPrezime("Petrovic");
+        p.setJmbg("1234567890123");
+        p.setEmail(invalidEmail);
+
+        Set<ConstraintViolation<Pacijent>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
     }
 
     @ParameterizedTest

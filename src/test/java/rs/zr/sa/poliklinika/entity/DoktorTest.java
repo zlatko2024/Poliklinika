@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Set;
 
@@ -23,7 +25,7 @@ class DoktorTest {
     void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        mockUsluga = new Usluga(); // Pretpostavka da Usluga ima prazan konstruktor
+        mockUsluga = new Usluga();
     }
 
     @Test
@@ -57,11 +59,43 @@ class DoktorTest {
         assertEquals("Marko", d.getIme());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setIme sa validacijom")
+    void setIme_InvalidValues_ShouldFailValidation(String invalidIme) {
+        Doktor d = new Doktor();
+        d.setIme(invalidIme);
+        d.setPrezime("Markovic");
+        d.setBrojLicence("LIC123");
+        d.setSpecijalnost("Kardiolog");
+        d.setUsluga(mockUsluga);
+
+        Set<ConstraintViolation<Doktor>> violations = validator.validate(d);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setPrezime() {
         Doktor d = new Doktor();
         d.setPrezime("Markovic");
         assertEquals("Markovic", d.getPrezime());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setPrezime sa validacijom")
+    void setPrezime_InvalidValues_ShouldFailValidation(String invalidPrezime) {
+        Doktor d = new Doktor();
+        d.setIme("Marko");
+        d.setPrezime(invalidPrezime);
+        d.setBrojLicence("LIC123");
+        d.setSpecijalnost("Kardiolog");
+        d.setUsluga(mockUsluga);
+
+        Set<ConstraintViolation<Doktor>> violations = validator.validate(d);
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -71,6 +105,22 @@ class DoktorTest {
         assertEquals("LIC123", d.getBrojLicence());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setBrojLicence sa validacijom")
+    void setBrojLicence_InvalidValues_ShouldFailValidation(String invalidLicenca) {
+        Doktor d = new Doktor();
+        d.setIme("Marko");
+        d.setPrezime("Markovic");
+        d.setBrojLicence(invalidLicenca);
+        d.setSpecijalnost("Kardiolog");
+        d.setUsluga(mockUsluga);
+
+        Set<ConstraintViolation<Doktor>> violations = validator.validate(d);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setSpecijalnost() {
         Doktor d = new Doktor();
@@ -78,11 +128,41 @@ class DoktorTest {
         assertEquals("Kardiolog", d.getSpecijalnost());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setSpecijalnost sa validacijom")
+    void setSpecijalnost_InvalidValues_ShouldFailValidation(String invalidSpecijalnost) {
+        Doktor d = new Doktor();
+        d.setIme("Marko");
+        d.setPrezime("Markovic");
+        d.setBrojLicence("LIC123");
+        d.setSpecijalnost(invalidSpecijalnost);
+        d.setUsluga(mockUsluga);
+
+        Set<ConstraintViolation<Doktor>> violations = validator.validate(d);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setUsluga() {
         Doktor d = new Doktor();
         d.setUsluga(mockUsluga);
         assertEquals(mockUsluga, d.getUsluga());
+    }
+
+    @Test
+    @DisplayName("Testiranje nedozvoljene null vrednosti za setUsluga sa validacijom")
+    void setUsluga_Null_ShouldFailValidation() {
+        Doktor d = new Doktor();
+        d.setIme("Marko");
+        d.setPrezime("Markovic");
+        d.setBrojLicence("LIC123");
+        d.setSpecijalnost("Kardiolog");
+        d.setUsluga(null);
+
+        Set<ConstraintViolation<Doktor>> violations = validator.validate(d);
+        assertFalse(violations.isEmpty());
     }
 
     @ParameterizedTest

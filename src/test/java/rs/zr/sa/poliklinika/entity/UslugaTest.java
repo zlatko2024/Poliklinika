@@ -7,6 +7,9 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Set;
 
@@ -21,7 +24,7 @@ class UslugaTest {
     void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        mockPoliklinika = new Poliklinika(); // Pretpostavka da Poliklinika ima prazan konstruktor
+        mockPoliklinika = new Poliklinika();
     }
 
     @Test
@@ -43,11 +46,37 @@ class UslugaTest {
         assertEquals("Ultrazvuk", u.getNaziv());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setNaziv sa validacijom")
+    void setNaziv_InvalidValues_ShouldFailValidation(String invalidNaziv) {
+        Usluga u = new Usluga();
+        u.setNaziv(invalidNaziv);
+        u.setCena(2500.0);
+        u.setPoliklinika(mockPoliklinika);
+
+        Set<ConstraintViolation<Usluga>> violations = validator.validate(u);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setCena() {
         Usluga u = new Usluga();
         u.setCena(3000.0);
         assertEquals(3000.0, u.getCena());
+    }
+
+    @Test
+    @DisplayName("Testiranje nedozvoljene null vrednosti za setCena sa validacijom")
+    void setCena_Null_ShouldFailValidation() {
+        Usluga u = new Usluga();
+        u.setNaziv("Opšti pregled");
+        u.setCena(null);
+        u.setPoliklinika(mockPoliklinika);
+
+        Set<ConstraintViolation<Usluga>> violations = validator.validate(u);
+        assertFalse(violations.isEmpty());
     }
 
     @Test

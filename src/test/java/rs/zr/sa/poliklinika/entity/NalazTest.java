@@ -8,7 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -25,8 +26,8 @@ class NalazTest {
     void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        mockPregled = new Pregled(); // Pretpostavka da Pregled ima prazan konstruktor
-        mockUput = new Uput();       // Pretpostavka da Uput ima prazan konstruktor
+        mockPregled = new Pregled();
+        mockUput = new Uput();
     }
 
     @Test
@@ -61,6 +62,20 @@ class NalazTest {
         assertEquals("Kontrolni pregled", n.getOpis());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setOpis sa validacijom")
+    void setOpis_InvalidValues_ShouldFailValidation(String invalidOpis) {
+        Nalaz n = new Nalaz();
+        n.setOpis(invalidOpis);
+        n.setDatumNalaza(LocalDate.now());
+        n.setPregled(mockPregled);
+
+        Set<ConstraintViolation<Nalaz>> violations = validator.validate(n);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setDatumNalaza() {
         Nalaz n = new Nalaz();
@@ -70,10 +85,34 @@ class NalazTest {
     }
 
     @Test
+    @DisplayName("Testiranje nedozvoljene null vrednosti za setDatumNalaza sa validacijom")
+    void setDatumNalaza_Null_ShouldFailValidation() {
+        Nalaz n = new Nalaz();
+        n.setOpis("Opis");
+        n.setDatumNalaza(null);
+        n.setPregled(mockPregled);
+
+        Set<ConstraintViolation<Nalaz>> violations = validator.validate(n);
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
     void setPregled() {
         Nalaz n = new Nalaz();
         n.setPregled(mockPregled);
         assertEquals(mockPregled, n.getPregled());
+    }
+
+    @Test
+    @DisplayName("Testiranje nedozvoljene null vrednosti za setPregled sa validacijom")
+    void setPregled_Null_ShouldFailValidation() {
+        Nalaz n = new Nalaz();
+        n.setOpis("Opis");
+        n.setDatumNalaza(LocalDate.now());
+        n.setPregled(null);
+
+        Set<ConstraintViolation<Nalaz>> violations = validator.validate(n);
+        assertFalse(violations.isEmpty());
     }
 
     @Test

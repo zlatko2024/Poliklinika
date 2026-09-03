@@ -8,7 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,8 +27,8 @@ class PregledTest {
     void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
-        mockPacijent = new Pacijent();       // Pretpostavka da Pacijent ima prazan konstruktor
-        mockPoliklinika = new Poliklinika(); // Pretpostavka da Poliklinika ima prazan konstruktor
+        mockPacijent = new Pacijent();
+        mockPoliklinika = new Poliklinika();
     }
 
     @Test
@@ -67,11 +68,41 @@ class PregledTest {
     }
 
     @Test
+    @DisplayName("Testiranje nedozvoljene null vrednosti za setDatum sa validacijom")
+    void setDatum_Null_ShouldFailValidation() {
+        Pregled p = new Pregled();
+        p.setDatum(null);
+        p.setVreme(LocalTime.now());
+        p.setVrstaPregleda("Kardiološki pregled");
+        p.setStatus("Zakazan");
+        p.setPacijent(mockPacijent);
+        p.setPoliklinika(mockPoliklinika);
+
+        Set<ConstraintViolation<Pregled>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
+    }
+
+    @Test
     void setVreme() {
         Pregled p = new Pregled();
         LocalTime vreme = LocalTime.of(12, 0);
         p.setVreme(vreme);
         assertEquals(vreme, p.getVreme());
+    }
+
+    @Test
+    @DisplayName("Testiranje nedozvoljene null vrednosti za setVreme sa validacijom")
+    void setVreme_Null_ShouldFailValidation() {
+        Pregled p = new Pregled();
+        p.setDatum(LocalDate.now());
+        p.setVreme(null);
+        p.setVrstaPregleda("Kardiološki pregled");
+        p.setStatus("Zakazan");
+        p.setPacijent(mockPacijent);
+        p.setPoliklinika(mockPoliklinika);
+
+        Set<ConstraintViolation<Pregled>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -81,11 +112,45 @@ class PregledTest {
         assertEquals("Ultrazvuk", p.getVrstaPregleda());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setVrstaPregleda sa validacijom")
+    void setVrstaPregleda_InvalidValues_ShouldFailValidation(String invalidVrsta) {
+        Pregled p = new Pregled();
+        p.setDatum(LocalDate.now());
+        p.setVreme(LocalTime.now());
+        p.setVrstaPregleda(invalidVrsta);
+        p.setStatus("Zakazan");
+        p.setPacijent(mockPacijent);
+        p.setPoliklinika(mockPoliklinika);
+
+        Set<ConstraintViolation<Pregled>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setStatus() {
         Pregled p = new Pregled();
         p.setStatus("Završen");
         assertEquals("Završen", p.getStatus());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setStatus sa validacijom")
+    void setStatus_InvalidValues_ShouldFailValidation(String invalidStatus) {
+        Pregled p = new Pregled();
+        p.setDatum(LocalDate.now());
+        p.setVreme(LocalTime.now());
+        p.setVrstaPregleda("Kardiološki pregled");
+        p.setStatus(invalidStatus);
+        p.setPacijent(mockPacijent);
+        p.setPoliklinika(mockPoliklinika);
+
+        Set<ConstraintViolation<Pregled>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
     }
 
     @Test

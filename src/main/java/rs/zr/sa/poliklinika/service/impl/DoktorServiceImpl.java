@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 
 /**
  * Implementacija servisnog sloja za entitet Doktor.
+ * Sadrži poslovnu logiku za upravljanje podacima o doktorima, uključujući
+ * pretragu, kreiranje, ažuriranje, brisanje i mapiranje entiteta u DTO objekte.
+ *
  * @author Zlatko Radovanovic
  */
 @Service
@@ -27,6 +30,11 @@ public class DoktorServiceImpl implements DoktorService {
     private final DoktorRepository doktorRepository;
     private final UslugaRepository uslugaRepository;
 
+    /**
+     * Vraća listu svih doktora evidentiranih u sistemu.
+     *
+     * @return lista objekata tipa {@link DoktorResponse} koja sadrži podatke o svim doktorima
+     */
     @Override
     public List<DoktorResponse> findAll() {
         return doktorRepository.findAll().stream()
@@ -34,6 +42,13 @@ public class DoktorServiceImpl implements DoktorService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Pronalazi doktora na osnovu njegovog jedinstvenog identifikatora.
+     *
+     * @param id jedinstveni identifikator doktora
+     * @return objekat tipa {@link DoktorResponse} sa podacima o pronađenom doktoru
+     * @throws RuntimeException ako doktor sa datim ID-jem ne postoji
+     */
     @Override
     public DoktorResponse findById(Long id) {
         Doktor doktor = doktorRepository.findById(id)
@@ -41,6 +56,13 @@ public class DoktorServiceImpl implements DoktorService {
         return mapToResponse(doktor);
     }
 
+    /**
+     * Čuva novog doktora u bazi podataka na osnovu prosleđenih podataka.
+     *
+     * @param request objekat tipa {@link DoktorRequest} koji sadrži podatke za kreiranje doktora
+     * @return objekat tipa {@link DoktorResponse} sa podacima o sačuvanom doktoru
+     * @throws RuntimeException ako usluga sa prosleđenim ID-jem ne postoji
+     */
     @Override
     public DoktorResponse save(DoktorRequest request) {
         Usluga usluga = uslugaRepository.findById(request.getUslugaId())
@@ -57,6 +79,14 @@ public class DoktorServiceImpl implements DoktorService {
         return mapToResponse(saved);
     }
 
+    /**
+     * Ažurira postojeće podatke o doktoru na osnovu njegovog ID-ja i novih podataka.
+     *
+     * @param id jedinstveni identifikator doktora koji se ažurira
+     * @param request objekat tipa {@link DoktorRequest} koji sadrži nove podatke
+     * @return objekat tipa {@link DoktorResponse} sa ažuriranim podacima o doktoru
+     * @throws RuntimeException ako doktor ili povezana usluga sa datim ID-jem ne postoje
+     */
     @Override
     public DoktorResponse update(Long id, DoktorRequest request) {
         Doktor doktor = doktorRepository.findById(id)
@@ -75,6 +105,12 @@ public class DoktorServiceImpl implements DoktorService {
         return mapToResponse(updated);
     }
 
+    /**
+     * Briše doktora iz sistema na osnovu njegovog jedinstvenog identifikatora.
+     *
+     * @param id jedinstveni identifikator doktora koji se briše
+     * @throws RuntimeException ako doktor sa datim ID-jem ne postoji
+     */
     @Override
     public void delete(Long id) {
         if (!doktorRepository.existsById(id)) {
@@ -83,6 +119,12 @@ public class DoktorServiceImpl implements DoktorService {
         doktorRepository.deleteById(id);
     }
 
+    /**
+     * Pomoćna metoda za mapiranje entiteta {@link Doktor} u odgovarajući DTO objekat {@link DoktorResponse}.
+     *
+     * @param d entitet doktora koji se mapira
+     * @return mapirani objekat tipa {@link DoktorResponse}
+     */
     private DoktorResponse mapToResponse(Doktor d) {
         Usluga u = d.getUsluga();
         Poliklinika p = u.getPoliklinika();

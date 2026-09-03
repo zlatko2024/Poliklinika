@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Set;
 
@@ -49,6 +51,20 @@ class PoliklinikaTest {
         assertEquals("MediGroup", p.getNaziv());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setNaziv sa validacijom")
+    void setNaziv_InvalidValues_ShouldFailValidation(String invalidNaziv) {
+        Poliklinika p = new Poliklinika();
+        p.setNaziv(invalidNaziv);
+        p.setAdresa("Nemanjina 10");
+        p.setKontaktTelefon("023111222");
+
+        Set<ConstraintViolation<Poliklinika>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setAdresa() {
         Poliklinika p = new Poliklinika();
@@ -56,11 +72,39 @@ class PoliklinikaTest {
         assertEquals("Bulevar Oslobođenja 5", p.getAdresa());
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setAdresa sa validacijom")
+    void setAdresa_InvalidValues_ShouldFailValidation(String invalidAdresa) {
+        Poliklinika p = new Poliklinika();
+        p.setNaziv("Centar Zdravlja");
+        p.setAdresa(invalidAdresa);
+        p.setKontaktTelefon("023111222");
+
+        Set<ConstraintViolation<Poliklinika>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
+    }
+
     @Test
     void setKontaktTelefon() {
         Poliklinika p = new Poliklinika();
         p.setKontaktTelefon("011333444");
         assertEquals("011333444", p.getKontaktTelefon());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
+    @DisplayName("Testiranje nedozvoljenih vrednosti za setKontaktTelefon sa validacijom")
+    void setKontaktTelefon_InvalidValues_ShouldFailValidation(String invalidTelefon) {
+        Poliklinika p = new Poliklinika();
+        p.setNaziv("Centar Zdravlja");
+        p.setAdresa("Nemanjina 10");
+        p.setKontaktTelefon(invalidTelefon);
+
+        Set<ConstraintViolation<Poliklinika>> violations = validator.validate(p);
+        assertFalse(violations.isEmpty());
     }
 
     @ParameterizedTest
